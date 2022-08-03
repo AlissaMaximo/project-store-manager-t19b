@@ -5,6 +5,7 @@ const productService = require("../../../services/productService");
 const mockProducts = require("../mocks/mockProducts");
 
 describe("Testar a camada de modelo dos produtos", () => {
+  // req1
   describe("Função getAll", () => {
     beforeEach(() => {
       sinon.stub(productModel, "getAll").resolves(mockProducts);
@@ -16,7 +17,7 @@ describe("Testar a camada de modelo dos produtos", () => {
 
     it("deve retornar um array", async () => {
       const response = await productService.getAll();
-  
+
       expect(response).to.be.a("object");
     });
 
@@ -86,7 +87,7 @@ describe("Testar a camada de modelo dos produtos", () => {
 
       it("deve retornar um objeto com código 404", async () => {
         const response = await productService.findById(4);
-  
+
         expect(response.code).to.be.equal(404);
       });
 
@@ -94,6 +95,75 @@ describe("Testar a camada de modelo dos produtos", () => {
         const response = await productService.findById(4);
 
         expect(response.message).to.be.equal("Product not found");
+      });
+    });
+  });
+
+  // req3 e 4
+  describe("Função addProduct", () => {
+    describe("Se o nome está incorreto", () => {
+      beforeEach(() => {
+        sinon.stub(productModel, "addProduct").resolves({ id: 4 });
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("deve retornar um objeto", async () => {
+        const response = await productService.addProduct({ name: "Cellphone" });
+        expect(response).to.be.a("object");
+      });
+
+      it("se não há nome, deve retornar um objeto com código 400", async () => {
+        const response = await productService.addProduct({});
+
+        expect(response.code).to.be.equal(400);
+      });
+
+      it("se nome tem menos que 5 letras, deve retornar um objeto com código 422", async () => {
+        const response = await productService.addProduct({ name: "cel" });
+
+        expect(response.code).to.be.equal(422);
+      });
+
+      it("se não há nome, deve retornar uma mensagem", async () => {
+        const response = await productService.addProduct({});
+
+        expect(response.message).to.be.equal('"name" is required');
+      });
+      it("se nome tem menos que 5 letras, deve retornar uma mensagem", async () => {
+        const response = await productService.addProduct({ name: "cel" });
+
+        expect(response.message).to.be.equal(
+          '"name" length must be at least 5 characters long'
+        );
+      });
+    });
+
+    describe("Se o nome está correto", () => {
+      beforeEach(() => {
+        sinon.stub(productModel, "addProduct").resolves({ id: 4 });
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("deve retornar um objeto", async () => {
+        const response = await productService.addProduct({ name: "Cellphone" });
+
+        expect(response).to.be.a("object");
+      });
+      it("deve retornar um objeto com código 201", async () => {
+        const response = await productService.addProduct({ name: "Cellphone" });
+
+        expect(response.code).to.be.equal(201);
+      });
+      it("deve retornar o produto criado", async () => {
+        const response = await productService.addProduct({ name: "Cellphone" });
+  
+        expect(response.product).to.be.deep.equal({ id: 4, name: "Cellphone" });
       });
     });
   });

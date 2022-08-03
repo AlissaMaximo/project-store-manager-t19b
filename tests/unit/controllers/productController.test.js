@@ -5,6 +5,7 @@ const productController = require("../../../controllers/productController");
 const mockProducts = require("../mocks/mockProducts");
 
 describe("Testar a camada de controle dos produtos", () => {
+  // req1
   describe("Função getAll", () => {
     const request = {};
     const response = {};
@@ -89,6 +90,106 @@ describe("Testar a camada de controle dos produtos", () => {
         await productController.findById(request, response);
         expect(response.json.calledWith({ message: "Product not found" })).to.be
           .true;
+      });
+    });
+  });
+
+  // req3 e 4
+  describe("Função addProduct", () => {
+    describe("se o nome é correto", () => {
+      const request = {};
+      const response = {};
+
+      beforeEach(() => {
+        request.body = {
+          name: "Cellphone",
+        };
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
+        sinon
+          .stub(productService, "addProduct")
+          .resolves({ code: 201, product: { id: 4, name: "Cellphone" } });
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("deve retornar status 201", async () => {
+        await productController.addProduct(request, response);
+        expect(response.status.calledWith(201)).to.be.true;
+      });
+
+      it("deve retornar o produto criado", async () => {
+        await productController.addProduct(request, response);
+        expect(response.json.calledWith({ id: 4, name: "Cellphone" })).to.be.true;});
+    });
+
+    describe("se o nome tem comprimento menor que 5", () => {
+      const request = {};
+      const response = {};
+
+      beforeEach(() => {
+        request.body = {
+          name: "Cel",
+        };
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
+        sinon
+          .stub(productService, "addProduct")
+          .resolves({
+            code: 422,
+            message: '"name" length must be at least 5 characters long',
+          });
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("deve retornar status 422", async () => {
+        await productController.addProduct(request, response);
+        expect(response.status.calledWith(422)).to.be.true;
+      });
+
+      it("deve retornar uma mensagem", async () => {
+        await productController.addProduct(request, response);
+        expect(
+          response.json.calledWith({
+            message: '"name" length must be at least 5 characters long',
+          })
+        ).to.be.true;
+      });
+
+    });
+    describe("se não há nome", () => {
+      const request = {};
+      const response = {};
+
+      beforeEach(() => {
+        request.body = {
+          name: "",
+        };
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
+        sinon
+          .stub(productService, "addProduct")
+          .resolves({ code: 400, message: '"name" is required' });
+      });
+  
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("deve retornar status 400", async () => {
+        await productController.addProduct(request, response);
+        expect(response.status.calledWith(400)).to.be.true;
+      });
+
+      it("deve retornar uma mensagem", async () => {
+        await productController.addProduct(request, response);
+        expect(response.json.calledWith({ message: '"name" is required' })).to
+          .be.true;
       });
     });
   });

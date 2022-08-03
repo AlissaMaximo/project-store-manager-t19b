@@ -5,6 +5,7 @@ const productModel = require("../../../models/productModel");
 const mockProducts = require("../mocks/mockProducts");
 
 describe("Testar a camada de modelo dos produtos", () => {
+  // req1
   describe("Função getAll", () => {
     beforeEach(() => {
       sinon.stub(conn, "execute").resolves([mockProducts]);
@@ -46,6 +47,29 @@ describe("Testar a camada de modelo dos produtos", () => {
       const response = await productModel.findById(1);
 
       expect(response).to.be.deep.equal([mockProducts[0]]);
+    });
+  });
+
+  // req3 e 4
+  describe("Função addProduct", () => {
+    beforeEach(() => {
+      sinon.stub(conn, "execute").resolves([{ insertId: 4 }]);
+    });
+
+    afterEach(() => {
+      sinon.restore();
+    });
+
+    it("deve retornar um objeto", async () => {
+      const response = await productModel.addProduct({ name: "Cellphone" });
+
+      expect(response).to.be.a("object");
+    });
+
+    it("deve retornar um objeto com id do novo produto", async () => {
+      const response = await productModel.addProduct({ name: "Cellphone" });
+
+      expect(response).to.be.deep.equal({ id: 4 });
     });
   });
 });
