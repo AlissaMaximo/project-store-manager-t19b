@@ -3,6 +3,21 @@ const saleModel = require('../models/saleModel');
 
 let idSale;
 
+  // req16 validateSale e update
+  const validateSale = async (id) => {
+    const exactSale = await saleModel.findById(id);
+
+    if (exactSale.length === 0) return false;
+
+    return true;
+  };
+
+  const update = ({ productId, quantity }) => {
+    saleModel.updateSale({ id: idSale, productId, quantity });
+
+    return { productId, quantity };
+  };
+
 const addProduct = ({ productId, quantity }) => {
   saleModel.soldProducts({ saleId: idSale, productId, quantity });
 
@@ -46,13 +61,26 @@ const saleService = {
 
   delete: async (id) => {
     const exactSale = await saleModel.findById(id);
-    
+
     if (exactSale.length === 0) return { code: 404, message: 'Sale not found' };
-    
+
     await saleModel.delete(id);
-    
+
     return { code: 204 };
   },
+
+  updateSale: async (id, products) => {
+    const exactSale = await validateSale(id);
+
+    if (!exactSale) return { code: 404, message: 'Sale not found' };
+
+    idSale = id;
+
+    const itemsUpdated = products.map(update);
+
+    return { code: 200, update: { saleId: id, itemsUpdated } };
+  },
+
 };
 
 module.exports = saleService;

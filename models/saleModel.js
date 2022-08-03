@@ -43,11 +43,23 @@ const saleModel = {
   delete: async (id) => {
     const query = `DELETE FROM StoreManager.sales
       WHERE id = ?;`;
-    
+
     await connection.execute(query, [id]);
-    
+
     return true;
   },
+
+  // req16
+  updateSale: async ({ id, productId, quantity }) => {
+    const query = `UPDATE StoreManager.sales_products
+      SET quantity = ?
+      WHERE sale_id = ?
+      AND product_id = ?;`;
+    
+    await connection.execute(query, [quantity, id, productId]);
+    return { productId, quantity };
+  },
+
 };
 
 module.exports = saleModel;

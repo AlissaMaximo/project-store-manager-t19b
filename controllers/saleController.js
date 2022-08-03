@@ -27,10 +27,21 @@ const saleController = {
   delete: async (request, response) => {
     const { id } = request.params;
     const { code, message } = await saleService.delete(id);
-    
+
+    if (message) return response.status(code).json({ message });
+
+    response.status(code).end();
+  },
+
+  // req16
+  updateSale: async (request, response) => {
+    const { id } = request.params;
+    const { body } = request;
+    const { code, update, message } = await saleService.updateSale(id, body);
+
     if (message) return response.status(code).json({ message });
     
-    response.status(code).end();
+    response.status(code).json(update);
   },
 };
 
