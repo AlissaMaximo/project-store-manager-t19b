@@ -102,4 +102,26 @@ describe("Testar a camada de modelo dos produtos", () => {
     });
   });
 
+  // req12
+  describe("Função delete", () => {
+    beforeEach(() => {
+      sinon.stub(conn, "execute").resolves();
+    });
+
+    afterEach(() => {
+      sinon.restore();
+    });
+
+    it("deve retornar um booleano", async () => {
+      const response = await productModel.delete(1);
+      
+      expect(response).to.be.a("boolean");
+    });
+    it("deve retornar true", async () => {
+      const response = await productModel.delete(1);
+
+      expect(response).to.be.equal(true);
+    });
+  });
+
 });

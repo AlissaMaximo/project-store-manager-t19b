@@ -260,6 +260,8 @@ describe("Testar a camada de modelo dos produtos", () => {
       describe("Se o nome e id estão corretos", () => {
         beforeEach(() => {
           sinon.stub(productModel, "updateProduct").resolves(true);
+          sinon.stub(productModel, "findById").resolves([mockProducts[0]]);
+
         });
 
         afterEach(() => {
@@ -301,4 +303,55 @@ describe("Testar a camada de modelo dos produtos", () => {
     });
 
   });
+
+  // req12
+  describe("Função delete", () => {
+    describe("se o id está correto", () => {
+      beforeEach(() => {
+        sinon.stub(productModel, "delete").resolves(true);
+        sinon.stub(productModel, "findById").resolves([mockProducts[0]]);
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("deve retornar um objeto", async () => {
+        const response = await productService.delete(1);
+        expect(response).to.be.a("object");
+      });
+
+      it("deve retornar objeto com um código", async () => {
+        const response = await productService.delete(1);
+        expect(response).to.be.deep.equal({ code: 204 });
+      });
+    });
+
+    describe("se o id está incorreto", () => {
+      beforeEach(() => {
+        sinon.stub(productModel, "delete").resolves(true);
+        sinon.stub(productModel, "findById").resolves([]);
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("deve retornar um objeto", async () => {
+        const response = await productService.delete(99);
+        expect(response).to.be.a("object");
+      });
+
+      it("deve retornar objeto com um código", async () => {
+        const response = await productService.delete(99);
+        expect(response.code).to.be.equal(404);
+      });
+
+      it("deve retornar object com uma mensagem", async () => {
+        const response = await productService.delete(99);
+        expect(response.message).to.be.equal("Product not found");
+      });
+    });
+  });
+
 });
