@@ -31,6 +31,8 @@ app.get('/sales', rescue(saleController.getAll));
 
 app.get('/sales/:id', rescue(saleController.findById));
 
+app.put('/sales/:id', rescue(validateId), rescue(saleController.updateSale));
+
 app.delete('/sales/:id', rescue(saleController.delete));
 
 app.use((error, _request, response, _next) => {
