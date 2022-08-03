@@ -19,11 +19,23 @@ const productController = {
   // req2
   addProduct: async (request, response) => {
     const { name } = request.body;
-    const { code, message, product } = await productService.addProduct({ name });
+    const { code, message, product } = await productService.addProduct({
+      name,
+    });
 
     if (message) return response.status(code).json({ message });
 
     response.status(code).json(product);
+  },
+  // req10
+  updateProduct: async (request, response) => {
+    const { id } = request.params;
+    const { name } = request.body;
+    const { code, message } = await productService.updateProduct({ id, name });
+    
+    if (message) return response.status(code).json({ message });
+    
+    response.status(code).json({ id, name });
   },
 };
 

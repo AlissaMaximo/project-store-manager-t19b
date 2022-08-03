@@ -17,6 +17,8 @@ app.get('/products', rescue(productController.getAll));
 
 app.post('/products', rescue(productController.addProduct));
 
+app.put('/products/:id', rescue(productController.updateProduct));
+
 app.get('/products/:id', rescue(productController.findById));
 
 app.post('/sales', rescue(validateId), rescue(saleController.addSale));
