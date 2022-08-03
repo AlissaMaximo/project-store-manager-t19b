@@ -160,7 +160,7 @@ describe("Testa camada de serviço de vendas", () => {
         expect(response).to.be.a("object");
       });
 
-      it("deve retornar um objeto com um código", async () => {
+      it("deve retornar um objeto com um código 204", async () => {
         const response = await saleService.delete(1);
         expect(response).to.be.deep.equal({ code: 204 });
       });
@@ -182,7 +182,7 @@ describe("Testa camada de serviço de vendas", () => {
         expect(response).to.be.a("object");
       });
 
-      it("deve retornar objeto com um código", async () => {
+      it("deve retornar objeto com um código 404", async () => {
         const response = await saleService.delete(99);
         
         expect(response.code).to.be.equal(404);
@@ -196,5 +196,73 @@ describe("Testa camada de serviço de vendas", () => {
     });
   });
 
+  // req16
+  describe("Função updateSale", () => {
+    describe("se o id está correto", () => {
+      beforeEach(() => {
+        sinon.stub(saleModel, "updateSale").resolves();
+        sinon.stub(saleModel, "findById").resolves(mockSaleBefore);
+      });
 
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("deve retornar um objeto", async () => {
+        const response = await saleService.updateSale(1, [
+          { productId: 1, quantity: 1 },
+        ]);
+
+        expect(response).to.be.a("object");
+      });
+
+      it("deve retornar um objeto com um código 200", async () => {
+        const response = await saleService.updateSale(1, [
+          { productId: 1, quantity: 1 },
+        ]);
+
+        expect(response.code).to.be.equal(200);
+      });
+
+      it("deve retornar um objeto com os itens atualizados", async () => {
+        const response = await saleService.updateSale(1, [
+          { productId: 1, quantity: 1 },
+        ]);
+
+        expect(response.update).to.be.deep.equal({
+          saleId: 1,
+          itemsUpdated: [{ productId: 1, quantity: 1 }],
+        });
+      });
+    });
+
+    describe("se o id está incorreto", () => {
+      beforeEach(() => {
+        sinon.stub(saleModel, "updateSale").resolves(true);
+        sinon.stub(saleModel, "findById").resolves([]);
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("deve retornar um objeto", async () => {
+        const response = await saleService.updateSale(99);
+        
+        expect(response).to.be.a("object");
+      });
+
+      it("deve retornar um objeto com um código 404", async () => {
+        const response = await saleService.updateSale(99);
+
+        expect(response.code).to.be.equal(404);
+      });
+
+      it("deve retornar object com uma mensagem", async () => {
+        const response = await saleService.updateSale(99);
+
+        expect(response.message).to.be.equal("Sale not found");
+      });
+    });
+  });
 });

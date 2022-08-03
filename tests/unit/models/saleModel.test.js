@@ -105,4 +105,34 @@ describe("Testar camada modelo de vendas", () => {
     });
   });
   
+  // req16
+  describe("Função updateSale", () => {
+    beforeEach(() => {
+      sinon.stub(connection, "execute").resolves();
+    });
+
+    afterEach(() => {
+      sinon.restore();
+    });
+
+    it("retorna um objeto", async () => {
+      const response = await saleModel.updateSale({
+        id: 1,
+        productId: 1,
+        quantity: 1,
+      });
+      
+      expect(response).to.be.a("object");
+    });
+
+    it("o objeto deve ter o productId e a quantidade", async () => {
+      const response = await saleModel.updateSale({
+        id: 1,
+        productId: 1,
+        quantity: 1,
+      });
+
+      expect(response).to.be.deep.equal({ productId: 1, quantity: 1 });
+    });
+  });
 });

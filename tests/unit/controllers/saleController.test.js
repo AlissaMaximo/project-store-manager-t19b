@@ -4,6 +4,7 @@ const { expect } = require("chai");
 const saleService = require("../../../services/saleService");
 const saleController = require("../../../controllers/saleController");
 const { mockSalesAfter, mockSaleAfter } = require("../mocks/mockSales");
+const saleModel = require("../../../models/saleModel");
 
 describe("Testar camada de controle de vendas", () => {
   describe("Função addSale", () => {
@@ -161,7 +162,7 @@ describe("Testar camada de controle de vendas", () => {
         response.json = sinon.stub().returns();
         sinon
           .stub(saleService, "delete")
-          .resolves({ code: 404, message: "Product not found" });
+          .resolves({ code: 404, message: "Sale not found" });
       });
       
       afterEach(() => {
@@ -175,10 +176,87 @@ describe("Testar camada de controle de vendas", () => {
       
       it("deve retornar uma mensagem", async () => {
         await saleController.delete(request, response);
-        expect(response.json.calledWith({ message: "Product not found" })).to.be
+        expect(response.json.calledWith({ message: "Sale not found" })).to.be
           .true;
       });
     });
   });
 
+  // req16
+  describe("Função updateSale", () => {
+    describe("se o id existe", () => {
+      const request = {};
+      const response = {};
+
+      beforeEach(() => {
+        request.params = {
+          id: 1,
+        };
+        request.body = [{ productId: 1, quantity: 1 }];
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
+        sinon
+          .stub(saleService, "updateSale")
+          .resolves({
+            code: 200,
+            update: {
+              saleId: 1,
+              itemsUpdated: [{ productId: 1, quantity: 1 }],
+            },
+          });
+        sinon.stub(saleModel, "findById").resolves(mockSaleAfter);
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("deve retornar o código 200", async () => {
+        await saleController.updateSale(request, response);
+        expect(response.status.calledWith(200)).to.be.true;
+      });
+
+      it("deve retornar um objeto com os itens atualizados", async () => {
+        await saleController.updateSale(request, response);
+        expect(
+          response.json.calledWith({
+            saleId: 1,
+            itemsUpdated: [{ productId: 1, quantity: 1 }],
+          })
+        ).to.be.true;
+      });
+    });
+
+    describe("se o id não existe", () => {
+      const request = {};
+      const response = {};
+
+      beforeEach(() => {
+        request.params = {
+          id: 99,
+        };
+        request.body = [{ productId: 1, quantity: 1 }];
+        response.status = sinon.stub().returns(response);
+        response.json = sinon.stub().returns();
+        sinon
+          .stub(saleService, "updateSale")
+          .resolves({ code: 404, message: "Sale not found" });
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("deve retornar o código 404", async () => {
+        await saleController.updateSale(request, response);
+        expect(response.status.calledWith(404)).to.be.true;
+      });
+
+      it("deve retornar uma mensagem", async () => {
+        await saleController.updateSale(request, response);
+        expect(response.json.calledWith({ message: "Sale not found" })).to.be
+          .true;
+      });
+    });
+  });
 });
