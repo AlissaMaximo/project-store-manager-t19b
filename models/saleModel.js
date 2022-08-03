@@ -38,6 +38,16 @@ const saleModel = {
 
     return sales;
   },
+
+  // req12
+  delete: async (id) => {
+    const query = `DELETE FROM StoreManager.sales
+      WHERE id = ?;`;
+    
+    await connection.execute(query, [id]);
+    
+    return true;
+  },
 };
 
 module.exports = saleModel;
