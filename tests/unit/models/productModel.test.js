@@ -105,7 +105,7 @@ describe("Testar a camada de modelo dos produtos", () => {
   // req12
   describe("Função delete", () => {
     beforeEach(() => {
-      sinon.stub(conn, "execute").resolves();
+      sinon.stub(connection, "execute").resolves();
     });
 
     afterEach(() => {

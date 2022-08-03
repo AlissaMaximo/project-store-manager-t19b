@@ -322,7 +322,7 @@ describe("Testar a camada de controle dos produtos", () => {
         response.status = sinon.stub().returns(response);
         response.json = sinon.stub().returns();
         sinon
-          .stub(productService, "addProduct")
+          .stub(productService, "updateProduct")
           .resolves({ code: 404, message: "Product not found" });
       });
 

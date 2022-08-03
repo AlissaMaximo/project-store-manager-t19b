@@ -7,17 +7,17 @@ const { mockSalesBefore } = require("../mocks/mockSales");
 
 describe("Testar camada modelo de vendas", () => {
   describe("Função addSale", () => {
-    sinon.stub(connection, "execute").returns([{ insertId: 3 }]);
-  });
 
-  afterEach(() => {
-    sinon.restore();
-  });
+    afterEach(() => {
+      sinon.restore();
+    });
 
-  it("deve retornar o id da venda adicionada", async () => {
-    const response = await saleModel.addSale();
+    it("deve retornar o id da venda adicionada", async () => {
+      sinon.stub(connection, "execute").resolves([{ insertId: 3 }]);
+      const response = await saleModel.addSale();
 
-    expect(response).to.be.equal(3);
+      expect(response).to.be.equal(3);
+    });
   });
 
   describe("Função soldProducts", () => {
@@ -30,7 +30,7 @@ describe("Testar camada modelo de vendas", () => {
     });
 
     it("deve retornar dados do produto adicionado", async () => {
-      const response = await saleModel.soldProds({
+      const response = await saleModel.soldProducts({
         saleId: 1,
         productId: 2,
         quantity: 1,
@@ -85,7 +85,7 @@ describe("Testar camada modelo de vendas", () => {
   // req12
   describe("Função delete", () => {
     beforeEach(() => {
-      sinon.stub(conn, "execute").resolves();
+      sinon.stub(connection, "execute").resolves();
     });
 
     afterEach(() => {
