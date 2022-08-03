@@ -10,9 +10,7 @@ const saleController = {
   },
   // req8
   getAll: async (_request, response) => {
-    const { code, message, sales } = await saleService.getAll();
-
-    if (message) return response.status(code).json({ message });
+    const { code, sales } = await saleService.getAll();
 
     response.status(code).json(sales);
   },
