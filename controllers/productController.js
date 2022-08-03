@@ -1,6 +1,7 @@
 const productService = require('../services/productService');
 
 const productController = {
+  // req1
   getAll: async (_request, response) => {
     const { code, products } = await productService.getAll();
 
@@ -9,6 +10,16 @@ const productController = {
   findById: async (request, response) => {
     const { id } = request.params;
     const { code, message, product } = await productService.findById(id);
+
+    if (message) return response.status(code).json({ message });
+
+    response.status(code).json(product);
+  },
+
+  // req2
+  addProduct: async (request, response) => {
+    const { name } = request.body;
+    const { code, message, product } = await productService.addProduct({ name });
 
     if (message) return response.status(code).json({ message });
 
