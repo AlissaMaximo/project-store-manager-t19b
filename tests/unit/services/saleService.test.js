@@ -141,4 +141,60 @@ describe("Testa camada de serviço de vendas", () => {
       });
     });
   });
+
+  // req12
+  describe("Função delete", () => {
+    describe("se o id estiver correto", () => {
+      beforeEach(() => {
+        sinon.stub(saleModel, "delete").resolves(true);
+        sinon.stub(saleModel, "findById").resolves(mockSaleBefore);
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("deve retornar um objeto", async () => {
+        
+        const response = await saleService.delete(1);
+        expect(response).to.be.a("object");
+      });
+
+      it("deve retornar um objeto com um código", async () => {
+        const response = await saleService.delete(1);
+        expect(response).to.be.deep.equal({ code: 204 });
+      });
+
+    });
+    describe("se o id estiver incorreto", () => {
+      beforeEach(() => {
+        sinon.stub(saleModel, "delete").resolves(true);
+        sinon.stub(saleModel, "findById").resolves([]);
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it("deve retornar um objeto", async () => {
+        const response = await saleService.delete(99);
+        
+        expect(response).to.be.a("object");
+      });
+
+      it("deve retornar objeto com um código", async () => {
+        const response = await saleService.delete(99);
+        
+        expect(response.code).to.be.equal(404);
+      });
+
+      it("deve retornar um objeto com uma mensagem", async () => {
+        const response = await saleService.delete(99);
+        
+        expect(response.message).to.be.equal("Sale not found");
+      });
+    });
+  });
+
+
 });
