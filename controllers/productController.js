@@ -19,7 +19,9 @@ const productController = {
   // req2
   addProduct: async (request, response) => {
     const { name } = request.body;
-    const { code, message, product } = await productService.addProduct({ name });
+    const { code, message, product } = await productService.addProduct({
+      name,
+    });
 
     if (message) return response.status(code).json({ message });
 
@@ -40,10 +42,17 @@ const productController = {
   delete: async (request, response) => {
     const { id } = request.params;
     const { code, message } = await productService.delete(id);
-    
+
     if (message) return response.status(code).json({ message });
-    
+
     response.status(code).end();
+  },
+
+  // req18
+  query: async (request, response) => {
+    const { q } = request.query;
+    const { code, products } = await productService.query(q);
+    response.status(code).json(products);
   },
 };
 

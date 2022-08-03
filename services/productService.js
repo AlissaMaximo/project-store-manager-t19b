@@ -11,7 +11,9 @@ const productService = {
   findById: async (id) => {
     const product = await productModel.findById(id);
 
-    if (product.length === 0) { return { code: 404, message: 'Product not found' }; }
+    if (product.length === 0) {
+      return { code: 404, message: 'Product not found' };
+    }
 
     return { code: 200, product: product[0] };
   },
@@ -42,23 +44,30 @@ const productService = {
     }
 
     const exactProduct = await productModel.findById(id);
-    
-    if (exactProduct.length === 0) return { code: 404, message: 'Product not found' };
-    
+
+    if (exactProduct.length === 0) { return { code: 404, message: 'Product not found' }; }
+
     await productModel.updateProduct({ id, name });
-    
+
     return { code: 200, id, name };
   },
 
   // req10
   delete: async (id) => {
     const exists = await productModel.findById(id);
-    
+
     if (exists.length === 0) return { code: 404, message: 'Product not found' };
-    
+
     await productModel.delete(id);
-    
+
     return { code: 204 };
+  },
+
+  // req18
+  query: async (q) => {
+    const products = await productModel.query(q);
+    
+    return { code: 200, products };
   },
 };
 

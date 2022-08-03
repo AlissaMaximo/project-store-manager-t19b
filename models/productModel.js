@@ -17,7 +17,7 @@ const productModel = {
 
   // req2
   addProduct: async ({ name }) => {
-    const query = 'INSERT INTO StoreManager.products (name) VALUES (?)';
+    const query = 'INSERT INTO StoreManager.products (name) VALUES (?);';
     const [{ insertId }] = await connection.execute(query, [name]);
 
     return { id: insertId };
@@ -27,7 +27,7 @@ const productModel = {
   updateProduct: async ({ id, name }) => {
     const query = `UPDATE StoreManager.products
       SET name = ?
-      WHERE id = ?`;
+      WHERE id = ?;`;
 
     await connection.execute(query, [name, id]);
 
@@ -38,10 +38,18 @@ const productModel = {
   delete: async (id) => {
     const query = `DELETE FROM StoreManager.products
       WHERE id = ?;`;
-    
+
     await connection.execute(query, [id]);
-    
+
     return true;
+  },
+  // req18
+  query: async (q) => {
+    const query = `SELECT * FROM StoreManager.products
+      WHERE name LIKE CONCAT('%', ?, '%');`;
+    const [products] = await connection.execute(query, [q]);
+    
+    return products;
   },
 };
 
