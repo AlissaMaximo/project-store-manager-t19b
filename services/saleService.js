@@ -3,20 +3,20 @@ const saleModel = require('../models/saleModel');
 
 let idSale;
 
-  // req16 validateSale e update
-  const validateSale = async (id) => {
-    const exactSale = await saleModel.findById(id);
+// req16 validateSale e update
+const validateSale = async (id) => {
+  const exactSale = await saleModel.findById(id);
 
-    if (exactSale.length === 0) return false;
+  if (exactSale.length === 0) return false;
 
-    return true;
-  };
+  return true;
+};
 
-  const update = ({ productId, quantity }) => {
-    saleModel.updateSale({ id: idSale, productId, quantity });
+const update = ({ productId, quantity }) => {
+  saleModel.updateSale({ id: idSale, productId, quantity });
 
-    return { productId, quantity };
-  };
+  return { productId, quantity };
+};
 
 const addProduct = ({ productId, quantity }) => {
   saleModel.soldProducts({ saleId: idSale, productId, quantity });

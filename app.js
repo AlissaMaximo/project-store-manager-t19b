@@ -33,6 +33,10 @@ app.get('/sales/:id', rescue(saleController.findById));
 
 app.delete('/sales/:id', rescue(saleController.delete));
 
+app.use((error, _request, response, _next) => {
+  response.status(500).json({ message: error.message });
+});
+
 // não remova essa exportação, é para o avaliador funcionar
 // você pode registrar suas rotas normalmente, como o exemplo acima
 // você deve usar o arquivo index.js para executar sua aplicação
