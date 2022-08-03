@@ -28,8 +28,18 @@ const productModel = {
     const query = `UPDATE StoreManager.products
       SET name = ?
       WHERE id = ?`;
-    
+
     await connection.execute(query, [name, id]);
+
+    return true;
+  },
+
+  // req10
+  delete: async (id) => {
+    const query = `DELETE FROM StoreManager.products
+      WHERE id = ?;`;
+    
+    await connection.execute(query, [id]);
     
     return true;
   },
