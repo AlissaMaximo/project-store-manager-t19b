@@ -18,7 +18,13 @@ const productService = {
 
   // req2
   addProduct: async ({ name }) => {
-    if (!name) return { code: 400, message: 'The product name is required' };
+    if (!name) return { code: 400, message: '"name" is required' };
+    if (name.length < 5) {
+      return {
+        code: 422,
+        message: '"name" length must be at least 5 characters long',
+      };
+    }
 
     const { id } = await productModel.addProduct({ name });
 
