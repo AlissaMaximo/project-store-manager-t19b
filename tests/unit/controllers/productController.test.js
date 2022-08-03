@@ -1,9 +1,9 @@
 const sinon = require("sinon");
 const { expect } = require("chai");
-const productService = require("../../../services/productService");
-const productController = require("../../../controllers/productController");
 const mockProducts = require("../mocks/mockProducts");
 const productModel = require("../../../models/productModel");
+const productService = require("../../../services/productService");
+const productController = require("../../../controllers/productController");
 
 describe("Testar a camada de controle dos produtos", () => {
   // req1
@@ -87,7 +87,7 @@ describe("Testar a camada de controle dos produtos", () => {
         expect(response.status.calledWith(404)).to.be.true;
       });
 
-      it("deve retornar um objeto com o produto dentro de um json", async () => {
+      it("deve retornar um objeto com os dados do produto dentro de um json", async () => {
         await productController.findById(request, response);
         expect(response.json.calledWith({ message: "Product not found" })).to.be
           .true;
@@ -227,7 +227,7 @@ describe("Testar a camada de controle dos produtos", () => {
         expect(response.status.calledWith(200)).to.be.true;
       });
 
-      it("deve retornar o produto criado", async () => {
+      it("deve retornar o produto atualizado", async () => {
         await productController.updateProduct(request, response);
         expect(response.json.calledWith({ id: 1, name: "Cellphone" })).to.be
           .true;
@@ -300,6 +300,7 @@ describe("Testar a camada de controle dos produtos", () => {
         await productController.updateProduct(request, response);
         expect(response.status.calledWith(400)).to.be.true;
       });
+
       it("deve retornar uma mensagem", async () => {
         await productController.updateProduct(request, response);
         expect(response.json.calledWith({ message: '"name" is required' })).to
@@ -333,6 +334,7 @@ describe("Testar a camada de controle dos produtos", () => {
         await productController.updateProduct(request, response);
         expect(response.status.calledWith(404)).to.be.true;
       });
+      
       it("deve retornar uma mensagem", async () => {
         await productController.updateProduct(request, response);
         expect(response.json.calledWith({ message: "Product not found" })).to.be

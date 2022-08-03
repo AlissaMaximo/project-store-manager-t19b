@@ -19,9 +19,7 @@ const productController = {
   // req2
   addProduct: async (request, response) => {
     const { name } = request.body;
-    const { code, message, product } = await productService.addProduct({
-      name,
-    });
+    const { code, message, product } = await productService.addProduct({ name });
 
     if (message) return response.status(code).json({ message });
 
