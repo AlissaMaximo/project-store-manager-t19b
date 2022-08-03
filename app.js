@@ -13,10 +13,6 @@ app.get('/products', rescue(productController.getAll));
 
 app.get('/products/:id', rescue(productController.findById));
 
-app.use((error, _request, response, _next) => {
-  response.status(500).json({ message: error.message });
-});
-
 // não remova essa exportação, é para o avaliador funcionar
 // você pode registrar suas rotas normalmente, como o exemplo acima
 // você deve usar o arquivo index.js para executar sua aplicação
