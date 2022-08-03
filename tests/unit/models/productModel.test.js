@@ -1,14 +1,14 @@
 const sinon = require("sinon");
 const { expect } = require("chai");
-const conn = require("../../../models/connection");
 const productModel = require("../../../models/productModel");
 const mockProducts = require("../mocks/mockProducts");
+const connection = require("../../../models/connection");
 
 describe("Testar a camada de modelo dos produtos", () => {
   // req1
   describe("Função getAll", () => {
     beforeEach(() => {
-      sinon.stub(conn, "execute").resolves([mockProducts]);
+      sinon.stub(connection, "execute").resolves([mockProducts]);
     });
 
     afterEach(() => {
@@ -30,7 +30,7 @@ describe("Testar a camada de modelo dos produtos", () => {
 
   describe("Função findById", () => {
     beforeEach(() => {
-      sinon.stub(conn, "execute").resolves([[mockProducts[0]]]);
+      sinon.stub(connection, "execute").resolves([[mockProducts[0]]]);
     });
 
     afterEach(() => {
@@ -53,7 +53,7 @@ describe("Testar a camada de modelo dos produtos", () => {
   // req3 e 4
   describe("Função addProduct", () => {
     beforeEach(() => {
-      sinon.stub(conn, "execute").resolves([{ insertId: 4 }]);
+      sinon.stub(connection, "execute").resolves([{ insertId: 4 }]);
     });
 
     afterEach(() => {
@@ -72,4 +72,34 @@ describe("Testar a camada de modelo dos produtos", () => {
       expect(response).to.be.deep.equal({ id: 4 });
     });
   });
+
+  // req10
+  describe("Função updateProduct", () => {
+    beforeEach(() => {
+      sinon.stub(connection, "execute").resolves();
+    });
+
+    afterEach(() => {
+      sinon.restore();
+    });
+
+    it("deve retornar um booleano", async () => {
+      const response = await productModel.updateProduct({
+        id: 1,
+        name: "Martelo",
+      });
+
+      expect(response).to.be.a("boolean");
+    });
+
+    it("deve retornar true", async () => {
+      const response = await productModel.updateProduct({
+        id: 1,
+        name: "Cellphone",
+      });
+
+      expect(response).to.be.equal(true);
+    });
+  });
+
 });
