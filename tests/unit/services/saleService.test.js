@@ -123,7 +123,7 @@ describe("Testa camada de serviço de vendas", () => {
 
         it("deve retornar um objeto", async () => {
           const response = await saleService.findById(1);
-          
+
           expect(response).to.be.a("object");
         });
 
@@ -132,7 +132,8 @@ describe("Testa camada de serviço de vendas", () => {
 
           expect(response.code).to.be.equal(404);
         });
-        it("deve retornar um objeto com um array das vendas", async () => {
+        
+        it("deve retornar uma mensagem", async () => {
           const response = await saleService.findById(1);
 
           expect(response.message).to.be.equal("Sale not found");
